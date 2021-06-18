@@ -11,6 +11,15 @@ module SessionsHelper
         end
     end
 
+    def correct_user
+        @user = User.find(params[:id])
+        redirect_to(root_url) unless @user == current_user
+    end
+
+    def store_location
+        session[:forwarding_url] = request.original_url if request.get?
+    end
+
     # Returns true if the user is logged in, false otherwise.
     def logged_in?
         !current_user.nil?
