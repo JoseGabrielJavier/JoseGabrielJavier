@@ -14,8 +14,8 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
   def feed
-    Micropost.where("user_id IN (:following_ids) OR user_id = :user_id",
-                    following_ids: following_ids, user_id: id)
+    part_of_feed = "relationships.follower_id = :id or microposts.user_id = :id"
+    Micropost.joins(user: :followers).where(part_of_feed, { id: id })
   end
 
   def follow(other_user)
